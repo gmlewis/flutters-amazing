@@ -12,18 +12,11 @@ class M extends StatefulWidget {
 
 class _MState extends State<M> with SingleTickerProviderStateMixin {
   List<double> p;
-  List<Color> g;
   AnimationController c;
   int n = 0;
   @override
   void initState() {
     super.initState();
-    g = [
-      Colors.indigo[900],
-      Colors.indigo[700],
-      Colors.indigo[600],
-      Colors.indigo[400],
-    ];
     c = AnimationController(
         duration: const Duration(milliseconds: 500), vsync: this)
       ..addListener(() => setState(() {}))
@@ -50,6 +43,11 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
     });
   }
 
+  g() {
+    var j = Colors.primaries[n % Colors.primaries.length];
+    return [j[400], j[600], j[700], j[900]];
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -62,7 +60,7 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
               stops: [0.1, 0.5, 0.7, 0.9],
-              colors: g,
+              colors: g(),
             ),
           ),
           child: CustomPaint(
