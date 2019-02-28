@@ -19,9 +19,7 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
     super.initState();
     c = AnimationController(
         duration: const Duration(milliseconds: 500), vsync: this)
-      ..addListener(() {
-        setState(() {});
-      })
+      ..addListener(() => setState(() {}))
       ..addStatusListener((l) {
         if (l == AnimationStatus.dismissed) b();
       });
