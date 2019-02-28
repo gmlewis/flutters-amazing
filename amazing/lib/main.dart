@@ -12,20 +12,34 @@ class M extends StatefulWidget {
 
 class _MState extends State<M> with SingleTickerProviderStateMixin {
   List<double> p;
-  Animation<double> a;
   AnimationController c;
+  int n = 0;
   @override
   void initState() {
     super.initState();
     c = AnimationController(
-        duration: const Duration(milliseconds: 800), vsync: this);
-    a = Tween<double>().animate(c)
+        duration: const Duration(milliseconds: 500), vsync: this)
       ..addListener(() {
         setState(() {});
+      })
+      ..addStatusListener((l) {
+        if (l == AnimationStatus.dismissed) b();
       });
-    rootBundle.loadString('a/0').then((s) {
+    b();
+  }
+
+  i() {
+    setState(() {
+      n = (n + 1) % 10;
+      c.reverse();
+    });
+  }
+
+  b() {
+    rootBundle.loadString('a/$n').then((s) {
       setState(() {
         p = jsonDecode(s).cast<double>();
+        c.reset();
         c.forward();
       });
     });
@@ -43,6 +57,11 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
             painter: S(p, c.value),
             child: Container(width: double.infinity, height: double.infinity),
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: i,
+          tooltip: 'Increment',
+          child: Icon(Icons.add),
         ),
       ),
     );
