@@ -12,11 +12,18 @@ class M extends StatefulWidget {
 
 class _MState extends State<M> with SingleTickerProviderStateMixin {
   List<double> p;
+  List<Color> g;
   AnimationController c;
   int n = 0;
   @override
   void initState() {
     super.initState();
+    g = [
+      Colors.indigo[900],
+      Colors.indigo[700],
+      Colors.indigo[600],
+      Colors.indigo[400],
+    ];
     c = AnimationController(
         duration: const Duration(milliseconds: 500), vsync: this)
       ..addListener(() => setState(() {}))
@@ -28,13 +35,13 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
 
   i() {
     setState(() {
-      n = (n + 1) % 10;
+      n++;
       c.reverse();
     });
   }
 
   b() {
-    rootBundle.loadString('a/$n').then((s) {
+    rootBundle.loadString('a/${n % 10}').then((s) {
       setState(() {
         p = jsonDecode(s).cast<double>();
         c.reset();
@@ -50,7 +57,14 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
       home: Scaffold(
         appBar: AppBar(title: Text('Amazing')),
         body: Container(
-          color: Colors.cyan,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              stops: [0.1, 0.5, 0.7, 0.9],
+              colors: g,
+            ),
+          ),
           child: CustomPaint(
             painter: S(p, c.value),
             child: Container(width: double.infinity, height: double.infinity),
