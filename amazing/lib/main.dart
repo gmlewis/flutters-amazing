@@ -48,6 +48,10 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
     return [j[400], j[600], j[700], j[900]];
   }
 
+  k() {
+    return Colors.accents[(n * 3) % Colors.accents.length];
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -64,7 +68,7 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
             ),
           ),
           child: CustomPaint(
-            painter: S(p, c.value),
+            painter: S(p, c.value, k()),
             child: Container(width: double.infinity, height: double.infinity),
           ),
         ),
@@ -81,10 +85,11 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
 class S extends CustomPainter {
   final List<double> p;
   final double t;
-  S(this.p, this.t);
+  final Color k;
+  S(this.p, this.t, this.k);
   @override
   bool shouldRepaint(S o) {
-    return o.p != p || o.t != t;
+    return o.p != p || o.t != t || o.k != k;
   }
 
   void paint(Canvas c, Size s) {
@@ -92,7 +97,7 @@ class S extends CustomPainter {
       return;
     }
     Paint a = Paint()
-      ..color = Colors.green
+      ..color = k
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 10.0;
     var f = (i) => Offset(t * 0.98 * s.width * p[i] + (1 - t) * 0.5 * s.width,
