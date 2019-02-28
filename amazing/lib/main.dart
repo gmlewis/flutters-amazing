@@ -5,13 +5,23 @@ import 'package:flutter/services.dart' show rootBundle;
 
 void main() => runApp(M());
 
-class M extends StatelessWidget {
+class M extends StatefulWidget {
+  @override
+  _MState createState() => _MState();
+}
+
+class _MState extends State<M> {
   List<double> p;
-  M() {
+  @override
+  void initState() {
+    super.initState();
     rootBundle.loadString('a/0').then((s) {
-      p = jsonDecode(s).cast<double>();
+      setState(() {
+        p = jsonDecode(s).cast<double>();
+      });
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,7 +29,6 @@ class M extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(title: Text('Amazing')),
         body: Container(
-          // margin: EdgeInsets.all(1.0),
           alignment: Alignment.topLeft,
           color: Colors.cyan,
           child: CustomPaint(
