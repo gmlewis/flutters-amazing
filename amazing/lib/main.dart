@@ -100,7 +100,7 @@ class S extends CustomPainter {
       ..strokeWidth = 10.0;
     var f = (i) => Offset(t * 0.98 * s.width * p[i] + (1 - t) * 0.5 * s.width,
         t * 0.98 * s.height * p[i + 1] + (1 - t) * 0.5 * s.height);
-    for (int i = 0; i < p.length - 2; i += 2) {
+    for (int i = 0; i < p.length - 2; i += 4) {
       c.drawLine(f(i), f(i + 2), a);
     }
   }
