@@ -33,6 +33,7 @@ class _MState extends State<M> {
           color: Colors.cyan,
           child: CustomPaint(
             painter: S(p),
+            child: Container(width: double.infinity, height: double.infinity),
           ),
         ),
       ),
@@ -56,9 +57,8 @@ class S extends CustomPainter {
       ..color = Colors.green
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 10.0;
-    print('p.length=${p.length}, size=(${s.width},${s.height})');
-    var w = 400.0;
-    var h = 680.0;
+    var w = 0.98 * s.width;
+    var h = 0.98 * s.height;
     for (int i = 0; i < p.length - 2; i += 2) {
       c.drawLine(Offset(w * p[i], h * p[i + 1]),
           Offset(w * p[i + 2], h * p[i + 3]), a);
