@@ -17,8 +17,9 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    c = AnimationController(duration: const Duration(seconds: 2), vsync: this);
-    a = Tween<double>(begin: 0, end: 300).animate(c)
+    c = AnimationController(
+        duration: const Duration(milliseconds: 800), vsync: this);
+    a = Tween<double>().animate(c)
       ..addListener(() {
         setState(() {});
       });
@@ -37,7 +38,6 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
       home: Scaffold(
         appBar: AppBar(title: Text('Amazing')),
         body: Container(
-          alignment: Alignment.topLeft,
           color: Colors.cyan,
           child: CustomPaint(
             painter: S(p, c.value),
