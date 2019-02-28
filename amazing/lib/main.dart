@@ -1,5 +1,5 @@
-import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -10,14 +10,22 @@ class M extends StatefulWidget {
   _MState createState() => _MState();
 }
 
-class _MState extends State<M> {
+class _MState extends State<M> with SingleTickerProviderStateMixin {
   List<double> p;
+  Animation<double> a;
+  AnimationController c;
   @override
   void initState() {
     super.initState();
+    c = AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    a = Tween<double>(begin: 0, end: 300).animate(c)
+      ..addListener(() {
+        setState(() {});
+      });
     rootBundle.loadString('a/0').then((s) {
       setState(() {
         p = jsonDecode(s).cast<double>();
+        c.forward();
       });
     });
   }
@@ -32,7 +40,7 @@ class _MState extends State<M> {
           alignment: Alignment.topLeft,
           color: Colors.cyan,
           child: CustomPaint(
-            painter: S(p),
+            painter: S(p, c.value),
             child: Container(width: double.infinity, height: double.infinity),
           ),
         ),
@@ -43,10 +51,11 @@ class _MState extends State<M> {
 
 class S extends CustomPainter {
   final List<double> p;
-  S(this.p);
+  final double t;
+  S(this.p, this.t);
   @override
   bool shouldRepaint(S o) {
-    return o.p != p;
+    return o.p != p || o.t != t;
   }
 
   void paint(Canvas c, Size s) {
@@ -57,11 +66,10 @@ class S extends CustomPainter {
       ..color = Colors.green
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 10.0;
-    var w = 0.98 * s.width;
-    var h = 0.98 * s.height;
+    var f = (i) => Offset(t * 0.98 * s.width * p[i] + (1 - t) * 0.5 * s.width,
+        t * 0.98 * s.height * p[i + 1] + (1 - t) * 0.5 * s.height);
     for (int i = 0; i < p.length - 2; i += 2) {
-      c.drawLine(Offset(w * p[i], h * p[i + 1]),
-          Offset(w * p[i + 2], h * p[i + 3]), a);
+      c.drawLine(f(i), f(i + 2), a);
     }
   }
 }
