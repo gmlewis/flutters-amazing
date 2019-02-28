@@ -48,9 +48,7 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
     return [j[400], j[600], j[700], j[900]];
   }
 
-  k() {
-    return Colors.accents[(n * 3) % Colors.accents.length];
-  }
+  k() => Colors.accents[(n * 3) % Colors.accents.length];
 
   @override
   Widget build(BuildContext context) {
