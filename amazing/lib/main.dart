@@ -46,12 +46,6 @@ class MState extends State<M> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  inc() {
-    setState(() {
-      c.reverse();
-    });
-  }
-
   Cubic cf(j) {
     final k = 4 * (j % (1 + ((cv?.length ?? 0) >> 2)));
     if (cv == null || k == cv.length) {
@@ -102,7 +96,7 @@ class MState extends State<M> with SingleTickerProviderStateMixin {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: inc,
+          onPressed: () => setState(() => c.reverse()),
           tooltip: 'Increment',
           child: Icon(Icons.add),
         ),
