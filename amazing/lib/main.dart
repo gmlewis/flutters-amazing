@@ -36,7 +36,7 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
 
   b() {
     n++;
-    rootBundle.loadString('a/${n % 10}').then((s) {
+    rootBundle.loadString('a/${n % 10}.json').then((s) {
       setState(() {
         p = jsonDecode(s).cast<double>();
         c.reset();
