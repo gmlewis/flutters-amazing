@@ -1,5 +1,5 @@
 name: amazing
-description: Amazing - maze generator in Flutter
+description: Flutter's Amazing! My entry to the Flutter Create contest, 2019.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -45,3 +45,4 @@ flutter:
     - a/7.json
     - a/8.json
     - a/9.json
+    - a/curves.json

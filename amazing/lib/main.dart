@@ -12,9 +12,10 @@ class M extends StatefulWidget {
 }
 
 class _MState extends State<M> with SingleTickerProviderStateMixin {
-  List<double> p;
+  List<double> p, cv;
   AnimationController c;
   int n;
+  Cubic tc, rc;
   @override
   void initState() {
     super.initState();
@@ -23,9 +24,12 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
         duration: const Duration(milliseconds: 500), vsync: this)
       ..addListener(() => setState(() {}))
       ..addStatusListener((l) {
-        if (l == AnimationStatus.dismissed) b();
+        if (l == AnimationStatus.dismissed) bump();
       });
-    b();
+    rootBundle.loadString('a/curves.json').then((s) {
+      cv = jsonDecode(s).cast<double>();
+    });
+    bump();
   }
 
   @override
@@ -40,7 +44,7 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
     });
   }
 
-  b() {
+  bump() {
     n++;
     rootBundle.loadString('a/${n % 10}.json').then((s) {
       setState(() {
@@ -74,7 +78,8 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
             ),
           ),
           child: CustomPaint(
-            painter: S(p, c.value, k(), c.value),
+            painter: S(p, tc?.transform(c.value) ?? c.value, k(),
+                rc?.transform(c.value) ?? c.value),
             child: Container(width: double.infinity, height: double.infinity),
           ),
         ),
