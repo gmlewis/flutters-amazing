@@ -28,7 +28,7 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
     b();
   }
 
-  i() {
+  inc() {
     setState(() {
       c.reverse();
     });
@@ -50,7 +50,7 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
     return [j[400], j[600], j[700], j[900]];
   }
 
-  k() => Colors.accents[(n * 3) % Colors.accents.length];
+  k() => Colors.accents[(n * 7) % Colors.accents.length];
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +73,7 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: i,
+          onPressed: inc,
           tooltip: 'Increment',
           child: Icon(Icons.add),
         ),
