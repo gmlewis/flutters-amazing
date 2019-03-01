@@ -4,6 +4,8 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
+const dur = 1000;
+
 void main() => runApp(M());
 
 class M extends StatefulWidget {
@@ -21,7 +23,7 @@ class MState extends State<M> with SingleTickerProviderStateMixin {
     super.initState();
     n = Random().nextInt(333);
     c = AnimationController(
-        duration: const Duration(milliseconds: 500), vsync: this)
+        duration: const Duration(milliseconds: dur), vsync: this)
       ..addListener(() => setState(() {}))
       ..addStatusListener((l) {
         if (l == AnimationStatus.dismissed) bump();
