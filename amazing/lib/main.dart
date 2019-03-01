@@ -28,6 +28,12 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
     b();
   }
 
+  @override
+  dispose() {
+    c.dispose();
+    super.dispose();
+  }
+
   inc() {
     setState(() {
       c.reverse();
