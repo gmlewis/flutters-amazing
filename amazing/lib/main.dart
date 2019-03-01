@@ -45,7 +45,7 @@ class MState extends State<M> with SingleTickerProviderStateMixin {
   }
 
   Cubic cf(j) {
-    final k = 4 * (j % (1 + (cv?.length ?? 0) / 4));
+    final k = 4 * (j % (1 + ((cv?.length ?? 0) >> 2)));
     if (cv == null || k == cv.length) {
       return null;
     }
