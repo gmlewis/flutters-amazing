@@ -96,7 +96,7 @@ class MState extends State<M> with SingleTickerProviderStateMixin {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => setState(() => c.reverse()),
+          onPressed: () => c.reverse(),
           tooltip: 'Increment',
           child: Icon(Icons.add),
         ),
