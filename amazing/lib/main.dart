@@ -46,7 +46,7 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
   }
 
   g() {
-    var j = Colors.primaries[n % Colors.primaries.length];
+    final j = Colors.primaries[n % Colors.primaries.length];
     return [j[400], j[600], j[700], j[900]];
   }
 
@@ -68,7 +68,7 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
             ),
           ),
           child: CustomPaint(
-            painter: S(p, c.value, k()),
+            painter: S(p, c.value, k(), c.value),
             child: Container(width: double.infinity, height: double.infinity),
           ),
         ),
@@ -84,24 +84,33 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
 
 class S extends CustomPainter {
   final List<double> p;
-  final double t;
+  final double t, r, _c, _s;
   final Color k;
-  S(this.p, this.t, this.k);
+  S(this.p, this.t, this.k, this.r)
+      : _c = cos(r * 2 * pi),
+        _s = sin(r * 2 * pi);
   @override
   bool shouldRepaint(S o) {
-    return o.p != p || o.t != t || o.k != k;
+    return o.p != p || o.t != t || o.k != k || o._c != _c || o._s != _s;
   }
 
   void paint(Canvas c, Size s) {
     if (p == null) {
       return;
     }
-    Paint a = Paint()
+    final a = Paint()
       ..color = k
       ..strokeCap = StrokeCap.round
       ..strokeWidth = p[0];
-    var f = (i) => Offset(t * s.width * (p[i] + p[1]) + (1 - t) * 0.5 * s.width,
-        t * s.height * (p[i + 1] + p[2]) + (1 - t) * 0.5 * s.height);
+    final double cx = 0.5 * s.width;
+    final double cy = 0.5 * s.height;
+    final r = (x, y) {
+      final dx = x - cx;
+      final dy = y - cy;
+      return Offset(cx + dx * _c - dy * _s, cy + dy * _c + dx * _s);
+    };
+    final f = (i) => r(t * s.width * (p[i] + p[1]) + (1 - t) * cx,
+        t * s.height * (p[i + 1] + p[2]) + (1 - t) * cy);
     for (int i = 3; i < p.length - 2; i += 4) {
       c.drawLine(f(i), f(i + 2), a);
     }
