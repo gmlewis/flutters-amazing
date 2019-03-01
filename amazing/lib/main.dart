@@ -26,6 +26,12 @@ class MState extends State<M> with SingleTickerProviderStateMixin {
         duration: const Duration(milliseconds: dur), vsync: this)
       ..addListener(() => setState(() {}))
       ..addStatusListener((l) {
+        if (l == AnimationStatus.completed) {
+          setState(() {
+            rc = null;
+            c.value = 1.0;
+          });
+        }
         if (l == AnimationStatus.dismissed) bump();
       });
     rootBundle.loadString('a/curves.json').then((s) {
@@ -114,7 +120,7 @@ class S extends CustomPainter {
         _s = sin(r * 2 * pi);
   @override
   bool shouldRepaint(S o) {
-    return o.p != p || o.t != t || o.k != k || o._c != _c || o._s != _s;
+    return o.p != p || o.t != t || o.k != k || o.r != r;
   }
 
   void paint(Canvas c, Size s) {
