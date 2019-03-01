@@ -8,10 +8,10 @@ void main() => runApp(M());
 
 class M extends StatefulWidget {
   @override
-  _MState createState() => _MState();
+  MState createState() => MState();
 }
 
-class _MState extends State<M> with SingleTickerProviderStateMixin {
+class MState extends State<M> with SingleTickerProviderStateMixin {
   List<double> p, cv;
   AnimationController c;
   int n;
@@ -44,11 +44,21 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
     });
   }
 
+  Cubic cf(j) {
+    final k = 4 * (j % (1 + (cv?.length ?? 0) / 4));
+    if (cv == null || k == cv.length) {
+      return null;
+    }
+    return Cubic(cv[k], cv[k + 1], cv[k + 2], cv[k + 3]);
+  }
+
   bump() {
     n++;
     rootBundle.loadString('a/${n % 10}.json').then((s) {
       setState(() {
         p = jsonDecode(s).cast<double>();
+        tc = cf(n * 11);
+        rc = cf(n * 13);
         c.reset();
         c.forward();
       });

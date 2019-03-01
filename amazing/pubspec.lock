@@ -39,6 +39,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  glob:
+    dependency: "direct dev"
+    description:
+      name: glob
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.7"
   matcher:
     dependency: transitive
     description:
