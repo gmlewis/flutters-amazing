@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -13,10 +14,11 @@ class M extends StatefulWidget {
 class _MState extends State<M> with SingleTickerProviderStateMixin {
   List<double> p;
   AnimationController c;
-  int n = 0;
+  int n;
   @override
   void initState() {
     super.initState();
+    n = Random().nextInt(333);
     c = AnimationController(
         duration: const Duration(milliseconds: 500), vsync: this)
       ..addListener(() => setState(() {}))
@@ -28,12 +30,12 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
 
   i() {
     setState(() {
-      n++;
       c.reverse();
     });
   }
 
   b() {
+    n++;
     rootBundle.loadString('a/${n % 10}').then((s) {
       setState(() {
         p = jsonDecode(s).cast<double>();
@@ -55,7 +57,7 @@ class _MState extends State<M> with SingleTickerProviderStateMixin {
     return MaterialApp(
       theme: ThemeData(primarySwatch: Colors.blue),
       home: Scaffold(
-        appBar: AppBar(title: Text('Amazing')),
+        appBar: AppBar(title: Text("Flutter's Amazing!")),
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -97,10 +99,10 @@ class S extends CustomPainter {
     Paint a = Paint()
       ..color = k
       ..strokeCap = StrokeCap.round
-      ..strokeWidth = 10.0;
-    var f = (i) => Offset(t * 0.98 * s.width * p[i] + (1 - t) * 0.5 * s.width,
-        t * 0.98 * s.height * p[i + 1] + (1 - t) * 0.5 * s.height);
-    for (int i = 0; i < p.length - 2; i += 4) {
+      ..strokeWidth = p[0];
+    var f = (i) => Offset(t * s.width * (p[i] + p[1]) + (1 - t) * 0.5 * s.width,
+        t * s.height * (p[i + 1] + p[2]) + (1 - t) * 0.5 * s.height);
+    for (int i = 3; i < p.length - 2; i += 4) {
       c.drawLine(f(i), f(i + 2), a);
     }
   }
