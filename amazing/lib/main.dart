@@ -60,6 +60,27 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
     rootBundle.loadString('a/${n % nMaze}.json').then((s) {
       setState(() {
         p = jsonDecode(s).cast<double>();
+        p = [
+          5.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          1.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0,
+          1.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]; // GML - DEBUG ONLY!!!
         tc = cf(n * 11);
         rc = cf(n * 13);
         c.reset();
@@ -126,16 +147,20 @@ class _S extends CustomPainter {
       ..color = k
       ..strokeCap = StrokeCap.round
       ..strokeWidth = p[0];
-    final double cx = 0.5 * s.width;
-    final double cy = 0.5 * s.height;
-    final r = (x, y) {
+    final cx = 0.5 * s.width;
+    final cy = 0.5 * s.height;
+    final rot = (x, y) {
       final dx = x - cx;
       final dy = y - cy;
       return Offset(cx + dx * _c - dy * _s, cy + dy * _c + dx * _s);
     };
-    final f = (i) => r(t * s.width * (p[i] + p[1]) + (1 - t) * cx,
-        t * s.height * (p[i + 1] + p[2]) + (1 - t) * cy);
+    final sf = t * min(s.width, s.height);
+    final ox = (cx > cy) ? (cx / s.height) - 0.5 : 0.0;
+    final oy = (cy > cx) ? (cy / s.width) - 0.5 : 0.0;
+    final f = (i) => rot(sf * (p[i] + p[1] + ox) + (1 - t) * cx,
+        sf * (p[i + 1] + p[2] + oy) + (1 - t) * cy);
     for (int i = 3; i < p.length - 2; i += 4) {
+      print('c=($cx,$cy), o=($ox,$oy): f($i)=${f(i)}, f(${i + 2})=${f(i + 2)}');
       c.drawLine(f(i), f(i + 2), a);
     }
   }
