@@ -5,15 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 const dur = 1000;
+const nMaze = 13;
 
-void main() => runApp(M());
+void main() => runApp(Maze());
 
-class M extends StatefulWidget {
+class Maze extends StatefulWidget {
   @override
   MState createState() => MState();
 }
 
-class MState extends State<M> with SingleTickerProviderStateMixin {
+class MState extends State<Maze> with SingleTickerProviderStateMixin {
   List<double> p, cv;
   AnimationController c;
   int n;
@@ -56,7 +57,7 @@ class MState extends State<M> with SingleTickerProviderStateMixin {
 
   bump() {
     n++;
-    rootBundle.loadString('a/${n % 10}.json').then((s) {
+    rootBundle.loadString('a/${n % nMaze}.json').then((s) {
       setState(() {
         p = jsonDecode(s).cast<double>();
         tc = cf(n * 11);
@@ -90,7 +91,7 @@ class MState extends State<M> with SingleTickerProviderStateMixin {
             ),
           ),
           child: CustomPaint(
-            painter: S(p, tc?.transform(c.value) ?? c.value, k(),
+            painter: _S(p, tc?.transform(c.value) ?? c.value, k(),
                 rc?.transform(c.value) ?? c.value),
             child: Container(width: double.infinity, height: double.infinity),
           ),
@@ -105,15 +106,15 @@ class MState extends State<M> with SingleTickerProviderStateMixin {
   }
 }
 
-class S extends CustomPainter {
+class _S extends CustomPainter {
   final List<double> p;
   final double t, r, _c, _s;
   final Color k;
-  S(this.p, this.t, this.k, this.r)
+  _S(this.p, this.t, this.k, this.r)
       : _c = cos(r * 2 * pi),
         _s = sin(r * 2 * pi);
   @override
-  bool shouldRepaint(S o) {
+  bool shouldRepaint(_S o) {
     return o.p != p || o.t != t || o.k != k || o.r != r;
   }
 

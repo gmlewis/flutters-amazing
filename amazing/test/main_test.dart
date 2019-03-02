@@ -10,7 +10,7 @@ import 'package:glob/glob.dart';
 import 'package:amazing/main.dart';
 
 void main() {
-  group('Test _MState.cf', () {
+  group('Test MState.cf', () {
     test('cv should start uninitialized', () {
       final m = MState();
       expect(m.cv, null);
