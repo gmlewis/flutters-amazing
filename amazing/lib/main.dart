@@ -131,28 +131,24 @@ class _MazePaint extends CustomPainter {
     if (p == null) {
       return;
     }
-    final Paint a = Paint()
+    final Paint linePaint = Paint()
       ..color = lnColr
       ..strokeCap = StrokeCap.round
       ..strokeWidth = t * p[0];
-    final double cx = 0.5 * s.width;
-    final double cy = 0.5 * s.height;
+    final double cx = 0.5 * s.width, cy = 0.5 * s.height;
     final rot = (double x, double y) {
-      final double dx = x - cx;
-      final double dy = y - cy;
+      final double dx = x - cx, dy = y - cy;
       return Offset(cx + dx * _c - dy * _s, cy + dy * _c + dx * _s);
     };
-    final double mx = 1.0 - 2.0 * p[1];
-    final double my = 1.0 - 2.0 * p[2];
-    final double sx = s.width / mx;
-    final double sy = s.height / my;
+    final double mx = 1.0 - 2.0 * p[1], my = 1.0 - 2.0 * p[2];
+    final double sx = s.width / mx, sy = s.height / my;
     final double sf = min(sx, sy);
     final double ox = (sx > sy) ? (cx / sf) - 0.5 : 0.0;
     final double oy = (sy > sx) ? (cy / sf) - 0.5 : 0.0;
     final f = (int i) => rot(t * sf * (p[i] + p[1] + ox) + (1 - t) * cx,
         t * sf * (p[i + 1] + p[2] + oy) + (1 - t) * cy);
     for (int i = 3; i < p.length - 2; i += 4) {
-      c.drawLine(f(i), f(i + 2), a);
+      c.drawLine(f(i), f(i + 2), linePaint);
     }
   }
 }
