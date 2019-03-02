@@ -36,17 +36,17 @@ flutter:
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
   assets:
-    - a/0.json
-    - a/1.json
-    - a/2.json
-    - a/3.json
-    - a/4.json
-    - a/5.json
-    - a/6.json
-    - a/7.json
-    - a/8.json
-    - a/9.json
-    - a/10.json
-    - a/11.json
-    - a/12.json
-    - a/curves.json
+    - assets/0.json
+    - assets/1.json
+    - assets/2.json
+    - assets/3.json
+    - assets/4.json
+    - assets/5.json
+    - assets/6.json
+    - assets/7.json
+    - assets/8.json
+    - assets/9.json
+    - assets/10.json
+    - assets/11.json
+    - assets/12.json
+    - assets/curves.json
