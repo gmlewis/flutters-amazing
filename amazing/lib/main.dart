@@ -68,9 +68,10 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
     });
   }
 
-  g() {
+  g(double t) {
     final j = Colors.primaries[n % Colors.primaries.length];
-    return [j[400], j[600], j[700], j[900]];
+    final lp = (i) => Color.lerp(Colors.grey[i], j[i], t);
+    return [lp(400), lp(600), lp(700), lp(900)];
   }
 
   k() => Colors.accents[(n * 7) % Colors.accents.length];
@@ -87,7 +88,7 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
               stops: [0.1, 0.5, 0.7, 0.9],
-              colors: g(),
+              colors: g(c.value),
             ),
           ),
           child: CustomPaint(
@@ -125,7 +126,7 @@ class _S extends CustomPainter {
     final a = Paint()
       ..color = k
       ..strokeCap = StrokeCap.round
-      ..strokeWidth = p[0];
+      ..strokeWidth = t * p[0];
     final cx = 0.5 * s.width;
     final cy = 0.5 * s.height;
     final rot = (x, y) {
