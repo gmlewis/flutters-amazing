@@ -67,6 +67,9 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
     n++;
     rootBundle.loadString('assets/${n % nMaze}.json').then((s) {
       setState(() {
+        // s = '[5.0,1.0,1.0,0.0,0.0,1.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,1.0,0.0,0.0]';
+        // s = '[5.0,1.0,0.5,0.0,0.0,1.0,0.0,1.0,0.0,1.0,0.5,1.0,0.5,0.0,0.5,0.0,0.5,0.0,0.0]';
+        // s = '[5.0,0.5,1.0,0.0,0.0,0.5,0.0,0.5,0.0,0.5,1.0,0.5,1.0,0.0,1.0,0.0,1.0,0.0,0.0]';
         p = jsonDecode(s).cast<double>();
         tc = cf(n * 11);
         rc = cf(n * 13);
@@ -119,13 +122,11 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
 
 class _MazePaint extends CustomPainter {
   final List<double> p;
-  final double t, r, _cos, _sin, _maxX, _maxY;
+  final double t, r, _cos, _sin;
   final Color lnColr;
   _MazePaint(this.p, this.t, this.lnColr, this.r)
       : _cos = cos(r * 2 * pi),
-        _sin = sin(r * 2 * pi),
-        _maxX = p != null ? 1.0 - 2.0 * p[1] : 1.0,
-        _maxY = p != null ? 1.0 - 2.0 * p[2] : 1.0;
+        _sin = sin(r * 2 * pi);
 
   @override
   bool shouldRepaint(_MazePaint o) {
@@ -146,12 +147,11 @@ class _MazePaint extends CustomPainter {
       final double dx = x - cx, dy = y - cy;
       return Offset(cx + dx * _cos - dy * _sin, cy + dy * _cos + dx * _sin);
     };
-    final double sx = s.width / _maxX, sy = s.height / _maxY;
+    final double sx = s.width / p[1], sy = s.height / p[2];
     final double sf = min(sx, sy);
-    final double ox = (sx > sy) ? (cx / sf) - 0.5 : 0.0;
-    final double oy = (sy > sx) ? (cy / sf) - 0.5 : 0.0;
-    final f = (int i) => rot(t * sf * (p[i] + p[1] + ox) + (1 - t) * cx,
-        t * sf * (p[i + 1] + p[2] + oy) + (1 - t) * cy);
+    final double ox = cx - 0.5 * sf * p[1], oy = cy - 0.5 * sf * p[2];
+    final f = (int i) => rot(t * (sf * p[i] + ox) + (1 - t) * cx,
+        t * (sf * p[i + 1] + oy) + (1 - t) * cy);
     for (int i = 3; i < p.length - 2; i += 4) {
       c.drawLine(f(i), f(i + 2), linePaint);
     }
