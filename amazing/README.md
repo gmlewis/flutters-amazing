@@ -10,6 +10,12 @@ and the beauty, speed, and fun of writing apps with Flutter, I decided
 to play around with colors, lines, animations, curves, and custom painters
 in Flutter to make some mazes. This app is the result.
 
+## Dedication
+
+I would like to dedicate this entry to my beautiful bride of 30 years, Susan.
+She is always patient, kind, and loving with me and puts up with a great deal.
+Thank you, my Love! If I win, the prize is yours.
+
 ## Running the app
 
 For either Android or iOS, execute the following command to run the app:
