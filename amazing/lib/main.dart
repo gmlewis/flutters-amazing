@@ -63,21 +63,21 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
         p = [
           5.0,
           0.0,
+          0.25,
           0.0,
           0.0,
-          0.0,
-          1.0,
-          0.0,
-          1.0,
-          0.0,
-          1.0,
-          1.0,
-          1.0,
           1.0,
           0.0,
           1.0,
           0.0,
           1.0,
+          0.5,
+          1.0,
+          0.5,
+          0.0,
+          0.5,
+          0.0,
+          0.5,
           0.0,
           0.0
         ]; // GML - DEBUG ONLY!!!
@@ -154,13 +154,18 @@ class _S extends CustomPainter {
       final dy = y - cy;
       return Offset(cx + dx * _c - dy * _s, cy + dy * _c + dx * _s);
     };
-    final sf = t * min(s.width, s.height);
-    final ox = (cx > cy) ? (cx / s.height) - 0.5 : 0.0;
-    final oy = (cy > cx) ? (cy / s.width) - 0.5 : 0.0;
-    final f = (i) => rot(sf * (p[i] + p[1] + ox) + (1 - t) * cx,
-        sf * (p[i + 1] + p[2] + oy) + (1 - t) * cy);
+    final mx = 1.0 - 2.0 * p[1];
+    final my = 1.0 - 2.0 * p[2];
+    final sx = s.width / mx;
+    final sy = s.height / my;
+    final sf = min(sx, sy);
+    final ox = (sx > sy) ? (cx / sf) - 0.5 : 0.0;
+    final oy = (sy > sx) ? (cy / sf) - 0.5 : 0.0;
+    final f = (i) => rot(t * sf * (p[i] + p[1] + ox) + (1 - t) * cx,
+        t * sf * (p[i + 1] + p[2] + oy) + (1 - t) * cy);
     for (int i = 3; i < p.length - 2; i += 4) {
-      print('c=($cx,$cy), o=($ox,$oy): f($i)=${f(i)}, f(${i + 2})=${f(i + 2)}');
+      print(
+          'sf=$sf, m=($mx,$my), c=($cx,$cy), o=($ox,$oy): f($i)=${f(i)}, f(${i + 2})=${f(i + 2)}');
       c.drawLine(f(i), f(i + 2), a);
     }
   }
