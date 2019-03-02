@@ -41,7 +41,7 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
         }
         if (l == AnimationStatus.dismissed) _bump(); // start new sequence
       });
-    rootBundle.loadString('a/curves.json').then((s) {
+    rootBundle.loadString('assets/curves.json').then((s) {
       cv = jsonDecode(s).cast<double>();
     });
     _bump();
@@ -65,7 +65,7 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
   // _bump starts the animation process after loading a new maze.
   void _bump() {
     n++;
-    rootBundle.loadString('a/${n % nMaze}.json').then((s) {
+    rootBundle.loadString('assets/${n % nMaze}.json').then((s) {
       setState(() {
         p = jsonDecode(s).cast<double>();
         tc = cf(n * 11);

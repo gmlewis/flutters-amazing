@@ -84,7 +84,7 @@ void main() {
 }
 
 Future<String> getAsset(String name) async {
-  await for (final path in Glob(name).list(root: '../a')) {
+  await for (final path in Glob(name).list(root: '../assets')) {
     if (path is File) {
       return path.readAsString();
     }
