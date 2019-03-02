@@ -34,8 +34,9 @@ void main() {
       expect(m.cv.length, 32 * 4);
       expect(m.cf(0).toString(), Cubic(0.18, 1.0, 0.04, 1.0).toString());
       expect(m.cf(31).toString(), Cubic(0.4, 0.0, 0.2, 1.0).toString());
-      expect(m.cf(32), null);
-      expect(m.cf(33).toString(), Cubic(0.18, 1.0, 0.04, 1.0).toString());
+      expect(m.cf(32), null); // Chance of 2 out of 34 for no transition.
+      expect(m.cf(33), null);
+      expect(m.cf(34).toString(), Cubic(0.18, 1.0, 0.04, 1.0).toString());
     });
   });
 }
