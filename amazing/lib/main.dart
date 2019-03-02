@@ -62,7 +62,7 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
     return Cubic(cv[k], cv[k + 1], cv[k + 2], cv[k + 3]);
   }
 
-  // _bump starts the animation process after loading a new maze.
+  // _bump starts the animation after loading a new maze.
   void _bump() {
     n++;
     rootBundle.loadString('assets/${n % nMaze}.json').then((s) {
