@@ -126,6 +126,7 @@ class _MazePaint extends CustomPainter {
     return o.p != p || o.t != t || o.lnColr != lnColr || o.r != r;
   }
 
+  @override
   void paint(Canvas c, Size s) {
     if (p == null) {
       return;
