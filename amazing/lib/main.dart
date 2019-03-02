@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -14,11 +15,13 @@ class Maze extends StatefulWidget {
   MState createState() => MState();
 }
 
+@visibleForTesting
 class MState extends State<Maze> with SingleTickerProviderStateMixin {
   List<double> p, cv;
   AnimationController c;
   int n;
   Cubic tc, rc;
+
   @override
   void initState() {
     super.initState();
@@ -33,12 +36,12 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
             c.value = 1.0;
           });
         }
-        if (l == AnimationStatus.dismissed) bump();
+        if (l == AnimationStatus.dismissed) _bump();
       });
     rootBundle.loadString('a/curves.json').then((s) {
       cv = jsonDecode(s).cast<double>();
     });
-    bump();
+    _bump();
   }
 
   @override
@@ -47,7 +50,8 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  Cubic cf(j) {
+  @visibleForTesting
+  Cubic cf(int j) {
     final k = 4 * (j % 34);
     if (cv == null || k >= cv.length) {
       return null;
@@ -55,7 +59,7 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
     return Cubic(cv[k], cv[k + 1], cv[k + 2], cv[k + 3]);
   }
 
-  bump() {
+  void _bump() {
     n++;
     rootBundle.loadString('a/${n % nMaze}.json').then((s) {
       setState(() {
@@ -68,13 +72,15 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
     });
   }
 
-  g(double t) {
+  @visibleForTesting
+  List<Color> grad(double t) {
     final j = Colors.primaries[n % Colors.primaries.length];
     final lp = (i) => Color.lerp(Colors.grey[i], j[i], t);
     return [lp(400), lp(600), lp(700), lp(900)];
   }
 
-  k() => Colors.accents[(n * 7) % Colors.accents.length];
+  @visibleForTesting
+  Color accent() => Colors.accents[(n * 7) % Colors.accents.length];
 
   @override
   Widget build(BuildContext context) {
@@ -88,11 +94,11 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
               stops: [0.1, 0.5, 0.7, 0.9],
-              colors: g(c.value),
+              colors: grad(c.value),
             ),
           ),
           child: CustomPaint(
-            painter: _S(p, tc?.transform(c.value) ?? c.value, k(),
+            painter: _MazePaint(p, tc?.transform(c.value) ?? c.value, accent(),
                 rc?.transform(c.value) ?? 0.0),
             child: Container(width: double.infinity, height: double.infinity),
           ),
@@ -107,41 +113,42 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
   }
 }
 
-class _S extends CustomPainter {
+class _MazePaint extends CustomPainter {
   final List<double> p;
   final double t, r, _c, _s;
-  final Color k;
-  _S(this.p, this.t, this.k, this.r)
+  final Color lnColr;
+  _MazePaint(this.p, this.t, this.lnColr, this.r)
       : _c = cos(r * 2 * pi),
         _s = sin(r * 2 * pi);
+
   @override
-  bool shouldRepaint(_S o) {
-    return o.p != p || o.t != t || o.k != k || o.r != r;
+  bool shouldRepaint(_MazePaint o) {
+    return o.p != p || o.t != t || o.lnColr != lnColr || o.r != r;
   }
 
   void paint(Canvas c, Size s) {
     if (p == null) {
       return;
     }
-    final a = Paint()
-      ..color = k
+    final Paint a = Paint()
+      ..color = lnColr
       ..strokeCap = StrokeCap.round
       ..strokeWidth = t * p[0];
-    final cx = 0.5 * s.width;
-    final cy = 0.5 * s.height;
-    final rot = (x, y) {
-      final dx = x - cx;
-      final dy = y - cy;
+    final double cx = 0.5 * s.width;
+    final double cy = 0.5 * s.height;
+    final rot = (double x, double y) {
+      final double dx = x - cx;
+      final double dy = y - cy;
       return Offset(cx + dx * _c - dy * _s, cy + dy * _c + dx * _s);
     };
-    final mx = 1.0 - 2.0 * p[1];
-    final my = 1.0 - 2.0 * p[2];
-    final sx = s.width / mx;
-    final sy = s.height / my;
-    final sf = min(sx, sy);
-    final ox = (sx > sy) ? (cx / sf) - 0.5 : 0.0;
-    final oy = (sy > sx) ? (cy / sf) - 0.5 : 0.0;
-    final f = (i) => rot(t * sf * (p[i] + p[1] + ox) + (1 - t) * cx,
+    final double mx = 1.0 - 2.0 * p[1];
+    final double my = 1.0 - 2.0 * p[2];
+    final double sx = s.width / mx;
+    final double sy = s.height / my;
+    final double sf = min(sx, sy);
+    final double ox = (sx > sy) ? (cx / sf) - 0.5 : 0.0;
+    final double oy = (sy > sx) ? (cy / sf) - 0.5 : 0.0;
+    final f = (int i) => rot(t * sf * (p[i] + p[1] + ox) + (1 - t) * cx,
         t * sf * (p[i + 1] + p[2] + oy) + (1 - t) * cy);
     for (int i = 3; i < p.length - 2; i += 4) {
       c.drawLine(f(i), f(i + 2), a);
