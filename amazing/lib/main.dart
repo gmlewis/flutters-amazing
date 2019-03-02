@@ -1,3 +1,6 @@
+// Flutter's Amazing! by Glenn M. Lewis - https://github.com/gmlewis
+// This is my entry for the Flutter Create contest - March, 2019.
+
 import 'dart:convert';
 import 'dart:math';
 
@@ -17,10 +20,10 @@ class Maze extends StatefulWidget {
 
 @visibleForTesting
 class MState extends State<Maze> with SingleTickerProviderStateMixin {
-  List<double> p, cv;
+  List<double> p, cv; // points and curve parameters
   AnimationController c;
   int n;
-  Cubic tc, rc;
+  Cubic tc, rc; // transition and rotation curves
 
   @override
   void initState() {
@@ -28,15 +31,15 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
     n = Random().nextInt(333);
     c = AnimationController(
         duration: const Duration(milliseconds: dur), vsync: this)
-      ..addListener(() => setState(() {}))
+      ..addListener(() => setState(() {})) // update paint
       ..addStatusListener((l) {
         if (l == AnimationStatus.completed) {
           setState(() {
             rc = null;
-            c.value = 1.0;
+            c.value = 1.0; // force rotation to completion
           });
         }
-        if (l == AnimationStatus.dismissed) _bump();
+        if (l == AnimationStatus.dismissed) _bump(); // start new sequence
       });
     rootBundle.loadString('a/curves.json').then((s) {
       cv = jsonDecode(s).cast<double>();
@@ -59,6 +62,7 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
     return Cubic(cv[k], cv[k + 1], cv[k + 2], cv[k + 3]);
   }
 
+  // _bump starts the animation process after loading a new maze.
   void _bump() {
     n++;
     rootBundle.loadString('a/${n % nMaze}.json').then((s) {
@@ -115,11 +119,13 @@ class MState extends State<Maze> with SingleTickerProviderStateMixin {
 
 class _MazePaint extends CustomPainter {
   final List<double> p;
-  final double t, r, _c, _s;
+  final double t, r, _cos, _sin, _maxX, _maxY;
   final Color lnColr;
   _MazePaint(this.p, this.t, this.lnColr, this.r)
-      : _c = cos(r * 2 * pi),
-        _s = sin(r * 2 * pi);
+      : _cos = cos(r * 2 * pi),
+        _sin = sin(r * 2 * pi),
+        _maxX = p != null ? 1.0 - 2.0 * p[1] : 1.0,
+        _maxY = p != null ? 1.0 - 2.0 * p[2] : 1.0;
 
   @override
   bool shouldRepaint(_MazePaint o) {
@@ -138,10 +144,9 @@ class _MazePaint extends CustomPainter {
     final double cx = 0.5 * s.width, cy = 0.5 * s.height;
     final rot = (double x, double y) {
       final double dx = x - cx, dy = y - cy;
-      return Offset(cx + dx * _c - dy * _s, cy + dy * _c + dx * _s);
+      return Offset(cx + dx * _cos - dy * _sin, cy + dy * _cos + dx * _sin);
     };
-    final double mx = 1.0 - 2.0 * p[1], my = 1.0 - 2.0 * p[2];
-    final double sx = s.width / mx, sy = s.height / my;
+    final double sx = s.width / _maxX, sy = s.height / _maxY;
     final double sf = min(sx, sy);
     final double ox = (sx > sy) ? (cx / sf) - 0.5 : 0.0;
     final double oy = (sy > sx) ? (cy / sf) - 0.5 : 0.0;
